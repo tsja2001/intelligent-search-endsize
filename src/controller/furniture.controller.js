@@ -1,4 +1,4 @@
-const nodejieba = require('nodejieba')
+// const nodejieba = require('nodejieba')
 const furnitureService = require('../service/furniture.service')
 const imageService = require('../service/image.service')
 const tagService = require('../service/tag.service')
@@ -45,28 +45,28 @@ class FurnitureController {
 
     // 分词
     // const result = nodejieba.cut(content)
-    const kw = nodejieba.extract(content, 5)
-    let result = kw.map((item) => item.word)
-    console.log('content', content)
-    console.log('result', result)
-    // TODO: 优化分词结果
-    if (!result || result.length === 0) {
-      result = [content]
-    }
-    const res = await furnitureService.searchByMultipleTags(result)
+    // const kw = nodejieba.extract(content, 5)
+    // let result = kw.map((item) => item.word)
+    // console.log('content', content)
+    // console.log('result', result)
+    // // TODO: 优化分词结果
+    // if (!result || result.length === 0) {
+    //   result = [content]
+    // }
+    // const res = await furnitureService.searchByMultipleTags(result)
 
-    for (let i = 0; i < res.length; i++) {
-      // 2. 查询首图
-      const images = await imageService.getList(res[i].id)
-      res[i].first_image = images[0]
-      // 查询商家
-      const merchant = await userService.getUserInfoById(res[i].merchant_id)
-      res[i].merchant = merchant
-    }
+    // for (let i = 0; i < res.length; i++) {
+    //   // 2. 查询首图
+    //   const images = await imageService.getList(res[i].id)
+    //   res[i].first_image = images[0]
+    //   // 查询商家
+    //   const merchant = await userService.getUserInfoById(res[i].merchant_id)
+    //   res[i].merchant = merchant
+    // }
 
     ctx.body = {
       message: '查询成功',
-      data: res,
+      // data: res,
     }
   }
 

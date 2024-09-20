@@ -22,7 +22,6 @@
     "koa": "^2.15.3",
     "koa-bodyparser": "^4.4.1",
     "mysql2": "^3.11.0",
-    "nodejieba": "^3.4.1",
     "nodemon": "^3.1.4",
     "tencentcloud-sdk-nodejs-tmt": "^4.0.930"
   }
