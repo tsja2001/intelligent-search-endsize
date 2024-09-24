@@ -9,6 +9,9 @@ aiRouter.post('/', aiController.create)
 // 创建Ai生成记录, 并生成图片
 aiRouter.post('/recordAndGenerate', aiController.recordAndGenerate)
 
+// 查询任务状态
+aiRouter.get('/task/:taskId', aiController.getTaskStatus);
+
 // 查询列表
 aiRouter.get('/list', aiController.getList)
 
