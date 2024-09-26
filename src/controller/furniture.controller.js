@@ -19,6 +19,8 @@ class FurnitureController {
 
   async getList(ctx, next) {
     const { title, merchant_id } = ctx.query
+    // console.log('ctx', ctx)
+    // console.log('ctx.header----------------------------', ctx.header)
     const res = await furnitureService.getList(title, merchant_id)
     for (let i = 0; i < res.length; i++) {
       // 查询图片

@@ -1,0 +1,12 @@
+{
+  "containers": [
+    {
+      "name": "end-side-wx",
+      "domain": "",
+      "ip": "",
+      "mode": "compose",
+      "containerId": "270c1ad13e2d3baa1a0ece2054ddb478844d586a08657bd54924755c575700b8"
+    }
+  ],
+  "config": {}
+}
