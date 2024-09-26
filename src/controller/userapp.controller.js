@@ -2,9 +2,8 @@ const userappService = require('../service/userapp.service')
 
 class UserappController {
   async create(ctx, next) {
-    console.log('------------------------')
     const openid = ctx.header["x-wx-openid"]
-    
+  
     const body = ctx.request.body
     body.openid = openid
     console.log(body)

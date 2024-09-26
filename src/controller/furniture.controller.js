@@ -19,8 +19,6 @@ class FurnitureController {
 
   async getList(ctx, next) {
     const { title, merchant_id } = ctx.query
-    // console.log('ctx', ctx)
-    // console.log('ctx.header----------------------------', ctx.header)
     const res = await furnitureService.getList(title, merchant_id)
     for (let i = 0; i < res.length; i++) {
       // 查询图片
@@ -49,26 +47,30 @@ class FurnitureController {
     // const result = nodejieba.cut(content)
     // const kw = nodejieba.extract(content, 5)
     // let result = kw.map((item) => item.word)
-    // console.log('content', content)
+    console.log('content----', content)
     // console.log('result', result)
     // // TODO: 优化分词结果
     // if (!result || result.length === 0) {
     //   result = [content]
     // }
-    // const res = await furnitureService.searchByMultipleTags(result)
 
-    // for (let i = 0; i < res.length; i++) {
-    //   // 2. 查询首图
-    //   const images = await imageService.getList(res[i].id)
-    //   res[i].first_image = images[0]
-    //   // 查询商家
-    //   const merchant = await userService.getUserInfoById(res[i].merchant_id)
-    //   res[i].merchant = merchant
-    // }
+    const result = [content]
+    const res = await furnitureService.searchByMultipleTags(result)
+
+    for (let i = 0; i < res.length; i++) {
+      // 2. 查询首图
+      const images = await imageService.getList(res[i].id)
+      res[i].first_image = images[0]
+      // 查询商家
+      const merchant = await userService.getUserInfoById(res[i].merchant_id)
+      res[i].merchant = merchant
+    }
+
+    console.log('res', res)
 
     ctx.body = {
       message: '查询成功',
-      // data: res,
+      data: res,
     }
   }
 

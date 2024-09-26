@@ -112,21 +112,30 @@ class furnitureService {
     console.log('tags--------------', tags)
 
     // SQL 查询语句，联合三个表进行查询，并计算匹配标签数量
+    // let statement = `
+    //   SELECT Furniture_Items.*, COUNT(DISTINCT Tags.id) as relevance
+    //   FROM Furniture_Items
+    //   JOIN Furniture_Tags ON Furniture_Items.id = Furniture_Tags.furniture_id
+    //   JOIN Tags ON Furniture_Tags.tag_id = Tags.id
+    //   WHERE ${tagsConditions}
+    //   GROUP BY Furniture_Items.id
+    //   ORDER BY relevance DESC, Furniture_Items.updated_at DESC
+    // `
+
     let statement = `
-      SELECT Furniture_Items.*, COUNT(DISTINCT Tags.id) as relevance
+      SELECT *
       FROM Furniture_Items
       JOIN Furniture_Tags ON Furniture_Items.id = Furniture_Tags.furniture_id
       JOIN Tags ON Furniture_Tags.tag_id = Tags.id
-      WHERE ${tagsConditions}
-      GROUP BY Furniture_Items.id
-      ORDER BY relevance DESC, Furniture_Items.updated_at DESC
+      WHERE Tags.name LIKE ? 
     `
 
     // 处理标签数组，为每个标签添加模糊搜索的通配符
-    let params = tags.map((tag) => `%${tag}%`)
+    // let params = tags.map((tag) => `%${tag}%`)
 
+    const tag = `%${tags[0].trim()}%`
     // 执行查询
-    const [result] = await connection.execute(statement, params)
+    const [result] = await connection.execute(statement, [tag])
 
     return result
   }

@@ -29,6 +29,7 @@ class TagController {
   }
 
   async getByName(ctx, next) {
+    console.log('ctx.query===============', ctx.query)
     const name = ctx.query.name
     const res = await tagService.getByName(name)
     ctx.body = {
