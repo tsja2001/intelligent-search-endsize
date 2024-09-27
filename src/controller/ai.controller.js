@@ -30,7 +30,6 @@ class AiController {
 
     this.queue.push({ taskId, body })
 
-
     console.log('recordAndGenerate 任务已加入队列', taskId)
     ctx.body = {
       message: '任务已加入队列',
@@ -214,7 +213,11 @@ class AiController {
 
   // Get list by user ID method
   async getListByUserId(ctx) {
-    const { user_id } = ctx.params
+    let { user_id } = ctx.params
+    if (!user_id || user_id == 'undefined' || user_id == undefined) {
+      user_id = 20
+    }
+
     const data = await aiService.getListByUserId(user_id)
     ctx.body = {
       message: '用户记录获取成功',
