@@ -158,6 +158,7 @@ class AiController {
       const res = await aiService.create({
         ...body,
         generated_image_url,
+        user_id: 20,
         transPrompt: transRes.TargetText,
       })
 
