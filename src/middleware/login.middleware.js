@@ -65,6 +65,8 @@ const varifyAuth = async (ctx, next) => {
     console.log('[ err ] >', err)
     return ctx.app.emit('error', UN_AUTHORIZATION, ctx)
   }
+
+  // await next()
 }
 
 module.exports = {

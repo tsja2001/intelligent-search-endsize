@@ -157,7 +157,7 @@ class AiController {
       const res = await aiService.create({
         ...body,
         generated_image_url,
-        user_id: 20,
+        user_id: body.user_id,
         transPrompt: transRes.TargetText,
       })
 
@@ -214,11 +214,14 @@ class AiController {
   // Get list by user ID method
   async getListByUserId(ctx) {
     let { user_id } = ctx.params
-    if (!user_id || user_id == 'undefined' || user_id == undefined) {
-      user_id = 20
+    // if (!user_id || user_id == 'undefined' || user_id == undefined) {
+    //   user_id = 20
+    // }
+    let data = []
+    if (user_id) {
+      data = await aiService.getListByUserId(user_id)
     }
 
-    const data = await aiService.getListByUserId(user_id)
     ctx.body = {
       message: '用户记录获取成功',
       data,
