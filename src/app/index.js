@@ -31,6 +31,14 @@ app.use(async (ctx, next) => {
 // app.use(loginRouter.routes())
 // app.use(loginRouter.allowedMethods())
 // 自动注册路由, 代替上面手动注册的写法⬆
+
+// 当访问跟路径时, 返回index.html
+app.use(async (ctx, next) => {
+  if (ctx.path === '/') {
+    ctx.body = fs.readFileSync(path.resolve(__dirname, './index.html'))
+  }
+})
+
 autoRegister(app)
 
 module.exports = app
