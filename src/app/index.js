@@ -2,6 +2,8 @@
 // const loginRouter = require('../router/login.router')
 const { autoRegister } = require('../router/auto_register')
 const bodyPaser = require('koa-bodyparser')
+const fs = require('fs')
+const path = require('path')
 
 const Koa = require('koa')
 
@@ -35,7 +37,10 @@ app.use(async (ctx, next) => {
 // 当访问跟路径时, 返回index.html
 app.use(async (ctx, next) => {
   if (ctx.path === '/') {
-    ctx.body = fs.readFileSync(path.resolve(__dirname, './index.html'))
+    ctx.set('Content-Type', 'text/html')
+    ctx.body = fs.createReadStream(path.join(__dirname, './index.html'))
+  } else {
+    await next()
   }
 })
 
