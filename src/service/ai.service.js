@@ -12,12 +12,16 @@ class AiService {
       generated_image_url,
       prompt,
       transPrompt,
+      // TODO 增加数据库字段
+      // isLocal, // 是否是PC任务
+      // status, // 任务状态 pending | processing | completed
+      // taskId, // 任务id
     } = body
     const statement =
       'INSERT INTO AI_Image_Generation_Records (user_id, type, original_image_url, mask_image_url, generated_image_url, prompt, transPrompt) VALUES (?, ?, ?, ?, ?, ?, ?)'
     const [result] = await connection.execute(statement, [
       user_id,
-      type,
+      JSON.stringify(type), // TODO type字段打下容不下json
       original_image_url,
       mask_image_url,
       generated_image_url,

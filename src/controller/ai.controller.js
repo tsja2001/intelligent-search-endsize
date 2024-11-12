@@ -1,4 +1,5 @@
 const aiService = require('../service/ai.service')
+const localService = require('../service/local.service')
 const sdService = require('../service/sd.service')
 const translateService = require('../service/translate.service')
 const Queue = require('better-queue')
@@ -35,69 +36,6 @@ class AiController {
       message: '任务已加入队列',
       taskId: taskId,
     }
-
-    // const body = ctx.request.body
-
-    // // 1. 翻译提示词内容
-    // const transRes = await translateService.translate({
-    //   SourceText: body.prompt,
-    // })
-
-    // let generated_image_url = ''
-
-    // // 2. 开始请求图片
-    // console.log('开始请求图片, 调用sd API')
-    // switch (body.type) {
-    //   // 装修
-    //   case 'renovating':
-    //     generated_image_url = await sdService.structure({
-    //       imageUrl: body.original_image_url,
-    //       prompt: transRes.TargetText,
-    //     })
-    //     break
-
-    //   case 'replace':
-    //     generated_image_url = await sdService.inpaint({
-    //       imageUrl: body.original_image_url,
-    //       maskUrl: body.mask_image_url,
-    //       prompt: transRes.TargetText,
-    //       grow_mask: body.grow_mask ?? 75,
-    //     })
-    //     break
-    //   case 'recolor':
-    //     const select_prompt_transRes = await translateService.translate({
-    //       SourceText: body.select_prompt,
-    //     })
-    //     generated_image_url = await sdService.searchAndRecolor({
-    //       imageUrl: body.original_image_url,
-    //       maskUrl: body.mask_image_url,
-    //       select_prompt: select_prompt_transRes.TargetText,
-    //       prompt: transRes.TargetText,
-    //       grow_mask: body.grow_mask ?? 20,
-    //     })
-    //     break
-    //   case 'styleReplace':
-    //     generated_image_url = await sdService.style({
-    //       imageUrl: body.original_image_url,
-    //       prompt: transRes.TargetText,
-    //     })
-    //     break
-    //   default:
-    //     break
-    // }
-
-    // // 3. 创建ai生成记录
-    // console.log('创建ai生成记录')
-    // const res = await aiService.create({
-    //   ...body,
-    //   generated_image_url,
-    //   transPrompt: transRes.TargetText,
-    // })
-
-    // ctx.body = {
-    //   message: '创建成功',
-    //   data: res,
-    // }
   }
 
   async processTask({ taskId, body }) {
@@ -113,45 +51,61 @@ class AiController {
 
       // 2. 开始请求图片
       console.log('开始请求图片, 调用sd API')
-      switch (body.type) {
-        // 装修
-        case 'renovating':
-          generated_image_url = await sdService.structure({
-            imageUrl: body.original_image_url,
-            prompt: transRes.TargetText,
-          })
-          break
 
-        case 'replace':
-          generated_image_url = await sdService.inpaint({
-            imageUrl: body.original_image_url,
-            maskUrl: body.mask_image_url,
-            prompt: transRes.TargetText,
-            grow_mask: body.grow_mask ?? 75,
-          })
-          break
-        case 'recolor':
-          const select_prompt_transRes = await translateService.translate({
-            SourceText: body.select_prompt,
-          })
-          generated_image_url = await sdService.searchAndRecolor({
-            imageUrl: body.original_image_url,
-            maskUrl: body.mask_image_url,
-            select_prompt: select_prompt_transRes.TargetText,
-            prompt: transRes.TargetText,
-            grow_mask: body.grow_mask ?? 20,
-          })
-          break
-        case 'styleReplace':
-          generated_image_url = await sdService.style({
-            imageUrl: body.original_image_url,
-            prompt: transRes.TargetText,
-          })
-          break
-        default:
-          break
+      // 如果调用本地服务
+      if (body.isLocal) {
+        console.log('调用本地服务')
+        // 处理local
+        const taskId = await localService.addTask({
+          imageUrl: body.original_image_url,
+          prompt: transRes.TargetText,
+        })
+
+        generated_image_url = 'taskId' + taskId
+
+
+      } else {
+        console.log('调用sd官方api')
+        // 如果调用sd官方api
+        switch (body.type) {
+          // 装修
+          case 'renovating':
+            generated_image_url = await sdService.structure({
+              imageUrl: body.original_image_url,
+              prompt: transRes.TargetText,
+            })
+            break
+
+          case 'replace':
+            generated_image_url = await sdService.inpaint({
+              imageUrl: body.original_image_url,
+              maskUrl: body.mask_image_url,
+              prompt: transRes.TargetText,
+              grow_mask: body.grow_mask ?? 75,
+            })
+            break
+          case 'recolor':
+            const select_prompt_transRes = await translateService.translate({
+              SourceText: body.select_prompt,
+            })
+            generated_image_url = await sdService.searchAndRecolor({
+              imageUrl: body.original_image_url,
+              maskUrl: body.mask_image_url,
+              select_prompt: select_prompt_transRes.TargetText,
+              prompt: transRes.TargetText,
+              grow_mask: body.grow_mask ?? 20,
+            })
+            break
+          case 'styleReplace':
+            generated_image_url = await sdService.style({
+              imageUrl: body.original_image_url,
+              prompt: transRes.TargetText,
+            })
+            break
+          default:
+            break
+        }
       }
-
       // 3. 创建ai生成记录
       console.log('创建ai生成记录')
       const res = await aiService.create({
