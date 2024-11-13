@@ -55,7 +55,6 @@ class ImageController {
   }
 
   upload = async (ctx, next) => {
-    console.log('Uploaded files:', ctx.request.files.file)
 
     let imageBuffer
 
