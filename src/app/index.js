@@ -51,13 +51,13 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   if (ctx.path === '/') {
     ctx.set('Content-Type', 'text/html')
-    ctx.body = fs.createReadStream(path.join(__dirname, './front/index.html'))
+    ctx.body = fs.createReadStream(path.join(__dirname, '../../front/index.html'))
   } else if (ctx.path === '/aaa') {
     ctx.set('Content-Type', 'text/html')
-    ctx.body = fs.createReadStream(path.join(__dirname, './index.html'))
+    ctx.body = fs.createReadStream(path.join(__dirname, '../../index.html'))
   } else if (ctx.path === '/bbb') {
     ctx.set('Content-Type', 'text/html')
-    ctx.body = fs.createReadStream(path.join(__dirname, './index1.html'))
+    ctx.body = fs.createReadStream(path.join(__dirname, '../../index1.html'))
   }
    {
     await next()
