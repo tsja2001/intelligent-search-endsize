@@ -50,7 +50,7 @@ app.use(async (ctx, next) => {
 app.use(async (ctx, next) => {
   if (ctx.path === '/') {
     ctx.set('Content-Type', 'text/html')
-    ctx.body = fs.createReadStream(path.join(__dirname, './index.html'))
+    ctx.body = fs.createReadStream(path.join(__dirname, './front/index.html'))
   } else {
     await next()
   }
