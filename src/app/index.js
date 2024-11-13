@@ -2,23 +2,24 @@
 // const loginRouter = require('../router/login.router')
 const { autoRegister } = require('../router/auto_register')
 // const bodyPaser = require('koa-bodyparser')
-const koaBody = require('koa-body').default;
+const koaBody = require('koa-body').default
 const fs = require('fs')
 const path = require('path')
 
 const Koa = require('koa')
 // const multer = require('@koa/multer')
 
-
 const app = new Koa()
 
-app.use(koaBody({
-  multipart: true,
-  formidable: {
-    uploadDir: './uploads',
-    keepExtensions: true,
-  },
-}));
+app.use(
+  koaBody({
+    multipart: true,
+    formidable: {
+      uploadDir: './uploads',
+      keepExtensions: true,
+    },
+  })
+)
 
 // app.use(bodyPaser())
 
@@ -51,7 +52,14 @@ app.use(async (ctx, next) => {
   if (ctx.path === '/') {
     ctx.set('Content-Type', 'text/html')
     ctx.body = fs.createReadStream(path.join(__dirname, './front/index.html'))
-  } else {
+  } else if (ctx.path === '/aaa') {
+    ctx.set('Content-Type', 'text/html')
+    ctx.body = fs.createReadStream(path.join(__dirname, './index.html'))
+  } else if (ctx.path === '/bbb') {
+    ctx.set('Content-Type', 'text/html')
+    ctx.body = fs.createReadStream(path.join(__dirname, './index1.html'))
+  }
+   {
     await next()
   }
 })
