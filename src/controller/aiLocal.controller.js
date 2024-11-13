@@ -14,14 +14,18 @@ class AiLocalController {
     }
   }
   async recordAndGenerate(ctx, next) {
+    console.log('接收到请求', ctx.request.body)
+
     const body = ctx.request.body
+    console.log('111')
     const taskId = uuidv4()
+    console.log('222')
 
     // 翻译提示词
     // 1. 翻译提示词内容
-    const transRes = await translateService.translate({
-      SourceText: body.prompt,
-    })
+    // const transRes = await translateService.translate({
+    //   SourceText: body.prompt,
+    // })
 
     // 1. 创建Ai记录
     // await aiService.create({
@@ -35,7 +39,8 @@ class AiLocalController {
     // 2. 加入队列, 等待生成图片
     localService.addTask({
       ...body,
-      transPrompt: transRes.TargetText,
+      transPrompt: 'transRes.TargetText',
+      // transPrompt: transRes.TargetText,
       isLocal: true,
       status: 'pending',
       taskId,

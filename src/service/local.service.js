@@ -22,6 +22,7 @@ class LocalService {
   constructor() {}
 
   addTask(params, taskId) {
+    console.log('addTask', params, taskId)
     this.tasks.push({
       taskId,
       params,

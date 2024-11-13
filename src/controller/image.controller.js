@@ -1,4 +1,5 @@
 const imageService = require('../service/image.service')
+const fs = require('fs')
 const COS = require('cos-nodejs-sdk-v5')
 
 class ImageController {
@@ -51,6 +52,35 @@ class ImageController {
       message: '获取预签名成功',
       data: res,
     }
+  }
+
+  upload = async (ctx, next) => {
+    console.log('Uploaded files:', ctx.request.files.file)
+
+    let imageBuffer
+
+    try {
+      const file = ctx.request.files.file
+      const reader = fs.createReadStream(file.filepath)
+      imageBuffer = await this.streamToBuffer(reader)
+    } catch (err) {
+      console.log('err1', err)
+    }
+    const imgUrl = await imageService.uploadImageToTencentCloud(imageBuffer)
+    ctx.body = {
+      code: 200,
+      data: imgUrl,
+      message: '上传成功',
+    }
+  }
+
+  streamToBuffer(stream) {
+    return new Promise((resolve, reject) => {
+      const chunks = []
+      stream.on('data', (chunk) => chunks.push(chunk))
+      stream.on('end', () => resolve(Buffer.concat(chunks)))
+      stream.on('error', reject)
+    })
   }
 }
 

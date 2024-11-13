@@ -1,30 +1,42 @@
 // const userRouter = require('../router/user.router')
 // const loginRouter = require('../router/login.router')
 const { autoRegister } = require('../router/auto_register')
-const bodyPaser = require('koa-bodyparser')
+// const bodyPaser = require('koa-bodyparser')
+const koaBody = require('koa-body').default;
 const fs = require('fs')
 const path = require('path')
 
 const Koa = require('koa')
+// const multer = require('@koa/multer')
+
 
 const app = new Koa()
 
-app.use(bodyPaser())
+app.use(koaBody({
+  multipart: true,
+  formidable: {
+    uploadDir: './uploads',
+    keepExtensions: true,
+  },
+}));
+
+// app.use(bodyPaser())
+
+// const upload = multer()
+// app.use(upload.single('file'))
 
 // 错误处理中间件
 app.use(async (ctx, next) => {
   try {
-    await next();
+    await next()
   } catch (err) {
-    ctx.status = err.status || 500;
+    ctx.status = err.status || 500
     ctx.body = {
       message: err.message || 'Internal Server Error',
-    };
-    ctx.app.emit('error', err, ctx);
+    }
+    ctx.app.emit('error', err, ctx)
   }
-});
-
-// app.use
+})
 
 // // 用户
 // app.use(userRouter.routes())
