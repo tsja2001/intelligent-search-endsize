@@ -15,7 +15,7 @@ app.use(
   koaBody({
     multipart: true,
     formidable: {
-      uploadDir: './uploads',
+      uploadDir: './',
       keepExtensions: true,
     },
   })

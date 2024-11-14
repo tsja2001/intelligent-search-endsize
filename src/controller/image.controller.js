@@ -53,25 +53,49 @@ class ImageController {
       data: res,
     }
   }
-
   upload = async (ctx, next) => {
-
-    let imageBuffer
-
     try {
       const file = ctx.request.files.file
-      const reader = fs.createReadStream(file.filepath)
-      imageBuffer = await this.streamToBuffer(reader)
+      // 直接从文件对象获取 buffer
+      const fileBuffer = fs.readFileSync(file.filepath)
+      // 上传到腾讯云
+      const imgUrl = await imageService.uploadImageToTencentCloud(fileBuffer)
+
+      // 删除临时文件
+      fs.unlinkSync(file.filepath)
+
+      ctx.body = {
+        code: 200,
+        data: imgUrl,
+        message: '上传成功',
+      }
     } catch (err) {
-      console.log('err1', err)
-    }
-    const imgUrl = await imageService.uploadImageToTencentCloud(imageBuffer)
-    ctx.body = {
-      code: 200,
-      data: imgUrl,
-      message: '上传成功',
+      console.error('上传失败:', err)
+      ctx.body = {
+        code: 500,
+        message: '上传失败',
+      }
     }
   }
+
+  // upload = async (ctx, next) => {
+
+  //   let imageBuffer
+
+  //   try {
+  //     const file = ctx.request.files.file
+  //     const reader = fs.createReadStream(file.filepath)
+  //     imageBuffer = await this.streamToBuffer(reader)
+  //   } catch (err) {
+  //     console.log('err1', err)
+  //   }
+  //   const imgUrl = await imageService.uploadImageToTencentCloud(imageBuffer)
+  //   ctx.body = {
+  //     code: 200,
+  //     data: imgUrl,
+  //     message: '上传成功',
+  //   }
+  // }
 
   streamToBuffer(stream) {
     return new Promise((resolve, reject) => {
