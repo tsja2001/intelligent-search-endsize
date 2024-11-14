@@ -7,8 +7,8 @@ const fs = require('fs')
 const path = require('path')
 
 const Koa = require('koa')
-// const multer = require('@koa/multer')
 
+const koaStatic = require('koa-static')
 const app = new Koa()
 
 app.use(
@@ -38,6 +38,9 @@ app.use(async (ctx, next) => {
     ctx.app.emit('error', err, ctx)
   }
 })
+
+const staticPath = path.join(__dirname, '../../front')
+app.use(koaStatic(staticPath))
 
 // // 用户
 // app.use(userRouter.routes())
